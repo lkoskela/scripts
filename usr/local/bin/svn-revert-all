@@ -1,0 +1,34 @@
+#!/bin/bash
+
+WC_PATH="$1"
+if [ "$WC_PATH" == "" ]; then
+  WC_PATH="."
+fi
+
+if [ ! -d "$WC_PATH/.svn" ]; then
+  echo "$WC_PATH is not a working copy?"
+  exit 1
+fi
+
+function list_modified_files {
+  svn status $WC_PATH 2>1 | grep 'M ' | awk '{printf "%s\n", $2}'
+}
+
+FILES=$(list_modified_files)
+FILES=$(svn status $WC_PATH 2>1 | grep 'M ' | awk '{printf "%s\n", $2}')
+if [ "$FILES" == "" ]; then
+  echo "No changes to revert."
+  exit 1
+fi
+
+echo "Reverting all changes in the following files:"
+printf "%s\n" $FILES
+
+echo -n "Proceed? [y/N] "
+read ANSWER
+
+case $ANSWER in
+  y*) svn revert $FILES ;;
+  *) echo "Operation aborted" ;;
+esac
+

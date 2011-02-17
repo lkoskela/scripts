@@ -70,7 +70,7 @@ __subversion_branch() {
 # Trim working dir to 1/4 the screen width #
 ############################################
 short_pwd() {
-  local pwdmaxlen=$(($COLUMNS/4))
+  local pwdmaxlen=$((COLUMNS/4))
   local trunc_symbol=".."
   if [[ $PWD == $HOME* ]]; then
     newPWD="~${PWD#$HOME}" 
